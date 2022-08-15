@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -34,6 +35,8 @@ public class UserController {
         }
         return user;
     }
+
+
 
     @PutMapping("/users")
     public User update(@Valid @RequestBody User user) {

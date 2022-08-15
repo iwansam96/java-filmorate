@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.time.Duration;
 import java.time.LocalDate;
 
@@ -13,6 +14,7 @@ public class Film {
     private int id;
     @NotBlank
     private String name;
+    @Pattern(regexp = "^(.{0,200}((?!)|$))")
     private String description;
     private LocalDate releaseDate;
     private Duration duration;
