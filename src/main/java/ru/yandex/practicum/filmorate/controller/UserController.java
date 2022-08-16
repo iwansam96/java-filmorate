@@ -7,6 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,8 +17,8 @@ public class UserController {
     private Map<Integer, User> users = new HashMap<>();
 
     @GetMapping("/users")
-    public Map<Integer, User> getAll() {
-        return users;
+    public Collection<User> getAll() {
+        return users.values();
     }
 
     @PostMapping("/users")
