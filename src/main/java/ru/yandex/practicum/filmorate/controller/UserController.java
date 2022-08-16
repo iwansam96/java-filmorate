@@ -1,12 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -31,7 +29,6 @@ public class UserController {
             }
         } catch (ValidationException e) {
             log.warn(e.getMessage());
-            return null;
         }
         return user;
     }
@@ -46,11 +43,9 @@ public class UserController {
                 users.put(user.getId(), user);
             else {
                 log.warn("Id not found");
-                return null;
             }
         } catch (ValidationException e) {
             log.warn(e.getMessage());
-            return null;
         }
         return user;
     }

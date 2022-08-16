@@ -13,7 +13,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 public class FilmController {
-    private Map<Integer, Film> films = new HashMap();
+    private Map<Integer, Film> films = new HashMap<>();
 
     @GetMapping("/films")
     public Map<Integer, Film> getAll() {
@@ -24,12 +24,11 @@ public class FilmController {
     public Film create(@Valid @RequestBody Film film) {
         log.info("Получен запрос к эндпоинту: POST /films");
         try {
-            if (validate(film) != null)
-                films.put(film.getId(), film);
+            validate(film);
+            films.put(film.getId(), film);
         }
         catch (ValidationException e) {
             log.warn(e.getMessage());
-            return null;
         }
         return film;
     }
@@ -42,11 +41,9 @@ public class FilmController {
                 films.put(film.getId(), film);
             else {
                 log.warn("Id not found");
-                return null;
             }
         } catch (ValidationException e) {
             log.warn(e.getMessage());
-            return null;
         }
         return film;
     }
