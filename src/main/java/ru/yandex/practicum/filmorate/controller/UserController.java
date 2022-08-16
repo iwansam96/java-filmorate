@@ -33,8 +33,6 @@ public class UserController {
         return user;
     }
 
-
-
     @PutMapping("/users")
     public User update(@Valid @RequestBody User user) {
         log.info("Получен запрос к эндпоинту: PUT /users");
