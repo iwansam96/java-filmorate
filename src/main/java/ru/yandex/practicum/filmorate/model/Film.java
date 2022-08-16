@@ -1,15 +1,12 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.filmorate.validator.ValidFilmDuration;
+import ru.yandex.practicum.filmorate.util.IdGenerator;
 import ru.yandex.practicum.filmorate.validator.ValidFilmReleaseDate;
 
 import javax.validation.constraints.*;
-import java.time.Duration;
 import java.time.LocalDate;
 
-@Builder
 @Data
 public class Film {
     private int id;
@@ -19,6 +16,14 @@ public class Film {
     private String description;
     @ValidFilmReleaseDate
     private LocalDate releaseDate;
-    @ValidFilmDuration
-    private Duration duration;
+    @Positive
+    private int duration;
+
+    public Film(String name, String description, LocalDate releaseDate, int duration) {
+        this.id = IdGenerator.generateId("film");
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+    }
 }
