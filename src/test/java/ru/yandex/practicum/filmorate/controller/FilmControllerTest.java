@@ -31,7 +31,7 @@ public class FilmControllerTest {
         String requestJson =  gson.toJson(film);
 
         this.mockMvc.perform(post("/films").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-                .andDo(print()).andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -44,7 +44,7 @@ public class FilmControllerTest {
         String requestJson =  gson.toJson(film);
 
         this.mockMvc.perform(post("/films").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-                .andDo(print()).andExpect(status().is4xxClientError());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class FilmControllerTest {
         String requestJson =  gson.toJson(film);
 
         this.mockMvc.perform(post("/films").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-                .andDo(print()).andExpect(status().is4xxClientError());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class FilmControllerTest {
         String requestJson =  gson.toJson(film);
 
         this.mockMvc.perform(post("/films").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-                .andDo(print()).andExpect(status().is4xxClientError());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -86,6 +86,6 @@ public class FilmControllerTest {
         String requestJson =  gson.toJson(film);
 
         this.mockMvc.perform(post("/films").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-                .andDo(print()).andExpect(status().is4xxClientError());
+                .andExpect(status().is4xxClientError());
     }
 }
