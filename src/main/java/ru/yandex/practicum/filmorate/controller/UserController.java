@@ -24,6 +24,8 @@ public class UserController {
     @PostMapping("/users")
     public User create(@Valid @RequestBody User user) {
         log.info("Получен запрос к эндпоинту: POST /users");
+        if (user.getName().isBlank())
+            user.setName(user.getLogin());
         users.put(user.getId(), user);
         return user;
     }

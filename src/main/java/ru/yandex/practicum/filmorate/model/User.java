@@ -26,10 +26,7 @@ public class User {
         this.id = IdGenerator.generateId("user");
         this.email = email;
         this.login = login;
-        if (!name.isBlank())
-            this.name = name;
-        else
-            this.name = login;
+        this.name = name;
         this.birthday = birthday;
     }
 }
