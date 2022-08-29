@@ -29,7 +29,7 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public User getById(@PathVariable int id) {
-        var result = service.getById(id);
+        User result = service.getById(id);
         if (result == null) {
             log.warn("User id {} not found", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -47,7 +47,7 @@ public class UserController {
     @PutMapping("/users")
     public User update(@Valid @RequestBody User user) {
         log.info("Получен запрос к эндпоинту: PUT /users");
-        var result = service.update(user);
+        User result = service.update(user);
         if (result == null) {
             log.warn("Id not found");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -56,9 +56,9 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public User delete(@Valid @RequestBody User user) {
+    public User delete(@RequestBody User user) {
         log.info("Получен запрос к эндпоинту: DELETE /users");
-        var result = service.delete(user);
+        User result = service.delete(user);
         if (result == null) {
             log.warn("User with id {} to REMOVE not found", user.getId());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -69,7 +69,7 @@ public class UserController {
     @PutMapping("/users/{id}/friends/{friendId}")
     public User addFriend(@PathVariable int id, @PathVariable int friendId) {
         log.info("Получен запрос к эндпоинту: PUT /users/{}/friends/{}", id, friendId);
-        var result = service.addFriend(id, friendId);
+        User result = service.addFriend(id, friendId);
         if (result == null) {
             log.warn("User with id {} or {} to ADD FRIEND not found", id, friendId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -80,7 +80,7 @@ public class UserController {
     @DeleteMapping("/users/{id}/friends/{friendId}")
     public User deleteFriend(@PathVariable int id, @PathVariable int friendId) {
         log.info("Получен запрос к эндпоинту: DELETE /users/{}/friends/{}", id, friendId);
-        var result = service.deleteFriend(id, friendId);
+        User result = service.deleteFriend(id, friendId);
         if (result == null) {
             log.warn("User with id {} or {} to REMOVE FRIEND not found", id, friendId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -91,7 +91,7 @@ public class UserController {
     @GetMapping("/users/{id}/friends")
     public Collection<User> getAllFriends(@PathVariable int id) {
         log.info("Получен запрос к эндпоинту: GET /users/{}/friends/", id);
-        var result = service.getALLFriends(id);
+        Collection<User> result = service.getALLFriends(id);
         if (result == null) {
             log.warn("User with id {} to GET ALL FRIENDS not found", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -102,7 +102,7 @@ public class UserController {
     @GetMapping("/users/{id}/friends/common/{otherId}")
     public List<User> getMutualFriends(@PathVariable int id, @PathVariable int otherId) {
         log.info("Получен запрос к эндпоинту: GET /users/{}/friends/common/{}", id, otherId);
-        var result = service.getMutualFriends(id, otherId);
+        List<User> result = service.getMutualFriends(id, otherId);
         if (result == null) {
             log.warn("User with id {} or {} to GET MUTUAL FRIENDS not found", id, otherId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

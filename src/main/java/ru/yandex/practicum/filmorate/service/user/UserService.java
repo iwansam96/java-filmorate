@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,8 +26,8 @@ public class UserService {
     }
 
     public User getById(Integer id) {
-        var all = storage.getAll();
-        for (var user : all) {
+        Collection<User> all = storage.getAll();
+        for (User user : all) {
             if (Objects.equals(user.getId(), id))
                 return user;
         }
@@ -63,7 +64,7 @@ public class UserService {
         User user = this.getById(userId);
         User friend = this.getById(friendId);
 
-        var userFriends = user.getFriends();
+        Set<Integer> userFriends = user.getFriends();
 
         if (userFriends.contains(friendId)) {
             userFriends.remove(friendId);
@@ -77,8 +78,8 @@ public class UserService {
     }
 
     public List<User> getMutualFriends(int userId, int secondUserId) {
-        var userFriends = this.getById(userId).getFriends();
-        var secondUserFriends = this.getById(secondUserId).getFriends();
+        Set<Integer> userFriends = this.getById(userId).getFriends();
+        Set<Integer> secondUserFriends = this.getById(secondUserId).getFriends();
         if (userFriends == null || secondUserFriends == null)
             return null;
         return userFriends.stream()

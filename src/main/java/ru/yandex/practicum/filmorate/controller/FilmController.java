@@ -30,7 +30,7 @@ public class FilmController {
 
     @GetMapping("/films/{id}")
     public Film getById(@PathVariable int id) {
-        var result = service.getById(id);
+        Film result = service.getById(id);
         if (result == null) {
             log.warn("Film id {} not found", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -48,7 +48,7 @@ public class FilmController {
     @PutMapping("/films")
     public Film update(@Valid @RequestBody Film film) {
         log.info("Получен запрос к эндпоинту: PUT /films");
-        var result = service.update(film);
+        Film result = service.update(film);
         if (result == null) {
             log.warn("Film with id {} to UPDATE not found", film.getId());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -57,9 +57,9 @@ public class FilmController {
     }
 
     @DeleteMapping("/films")
-    public Film delete(@Valid @RequestBody Film film) {
+    public Film delete(@RequestBody Film film) {
         log.info("Получен запрос к эндпоинту: DELETE /films");
-        var result = service.delete(film);
+        Film result = service.delete(film);
         if (result == null) {
             log.warn("Film with id {} to DELETE not found", film.getId());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -70,7 +70,7 @@ public class FilmController {
     @PutMapping("/films/{id}/like/{userId}")
     public Film addLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Получен запрос к эндпоинту: PUT /films/{}/like/{}", id, userId);
-        var result = service.addLike(id, userId);
+        Film result = service.addLike(id, userId);
         if (result == null) {
             log.warn("Film with id {} or like from user with id {} to PUT LIKE not found", id, userId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -81,7 +81,7 @@ public class FilmController {
     @DeleteMapping("/films/{id}/like/{userId}")
     public Film deleteLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Получен запрос к эндпоинту: DELETE /films/{}/like/{}", id, userId);
-        var result = service.deleteLike(id, userId);
+        Film result = service.deleteLike(id, userId);
         if (result == null) {
             log.warn("Film with id {} or like from user with id {} to DELETE LIKE not found", id, userId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -92,11 +92,7 @@ public class FilmController {
     @GetMapping("/films/popular")
     public List<Film> getTopLiked(@RequestParam(value="count", required = false) Integer count) {
         log.info("Получен запрос к эндпоинту: GET /films/popular?count={}", count);
-        List<Film> result;
-        if (count == null)
-            result = service.getTopLiked(10);
-        else
-            result = service.getTopLiked(count);
-        return result;
+        int size = count == null ? 10 : count;
+        return service.getTopLiked(size);
     }
 }

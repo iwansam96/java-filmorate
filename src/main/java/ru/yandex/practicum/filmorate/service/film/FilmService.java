@@ -7,6 +7,8 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +28,7 @@ public class FilmService {
     }
 
     public Film getById(int id) {
-        var film = storage.getAll().stream().filter(f -> f.getId() == id).findFirst();
+        Optional<Film> film = storage.getAll().stream().filter(f -> f.getId() == id).findFirst();
         return film.orElse(null);
     }
 
@@ -46,8 +48,8 @@ public class FilmService {
 
     public Film addLike(int filmId, int userId) {
         Film film = this.getById(filmId);
-        var likes = film.getLikes();
-        var result = likes.add(userId);
+        Set<Integer> likes = film.getLikes();
+        boolean result = likes.add(userId);
         if (!result)
             return null;
         else
@@ -57,7 +59,7 @@ public class FilmService {
 
     public Film deleteLike(int filmId, int userId) {
         Film film = this.getById(filmId);
-        var likes = film.getLikes();
+        Set<Integer> likes = film.getLikes();
         if (likes.contains(userId)) {
             likes.remove(userId);
         }
