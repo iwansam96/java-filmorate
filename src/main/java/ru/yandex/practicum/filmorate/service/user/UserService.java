@@ -54,8 +54,8 @@ public class UserService {
 
         if (user == null || friend == null)
             return null;
-        user.getFriends().add(friend.getId());
-        friend.getFriends().add(userId);
+        user.getFriendsUnconfirmed().add(friend.getId());
+        friend.getFriendsUnconfirmed().add(userId);
         storage.update(user);
         return user;
     }
@@ -64,22 +64,22 @@ public class UserService {
         User user = this.getById(userId);
         User friend = this.getById(friendId);
 
-        Set<Integer> userFriends = user.getFriends();
+        Set<Integer> userFriends = user.getFriendsUnconfirmed();
 
         if (userFriends.contains(friendId)) {
             userFriends.remove(friendId);
-            user.setFriends(userFriends);
+            user.setFriendsUnconfirmed(userFriends);
         }
         return friend;
     }
 
     public Collection<User> getALLFriends(int id) {
-        return this.getById(id).getFriends().stream().map(this::getById).collect(Collectors.toList());
+        return this.getById(id).getFriendsUnconfirmed().stream().map(this::getById).collect(Collectors.toList());
     }
 
     public List<User> getMutualFriends(int userId, int secondUserId) {
-        Set<Integer> userFriends = this.getById(userId).getFriends();
-        Set<Integer> secondUserFriends = this.getById(secondUserId).getFriends();
+        Set<Integer> userFriends = this.getById(userId).getFriendsUnconfirmed();
+        Set<Integer> secondUserFriends = this.getById(secondUserId).getFriendsUnconfirmed();
         if (userFriends == null || secondUserFriends == null)
             return null;
         return userFriends.stream()

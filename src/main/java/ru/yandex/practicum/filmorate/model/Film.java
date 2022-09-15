@@ -19,6 +19,8 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private int duration;
+    private Genres genre;
+    private Ratings rating;
     private Set<Integer> likes;
 
     public Film(String name, String description, LocalDate releaseDate, int duration) {
