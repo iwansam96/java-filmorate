@@ -26,12 +26,7 @@ public class UserService {
     }
 
     public User getById(Integer id) {
-        Collection<User> all = storage.getAll();
-        for (User user : all) {
-            if (Objects.equals(user.getId(), id))
-                return user;
-        }
-        return null;
+        return storage.getById(id);
     }
 
     public User create(User user) {

@@ -10,11 +10,9 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Primary
@@ -30,17 +28,18 @@ public class UserDbStorage implements UserStorage {
     public Collection<User> getAll() {
         String sql = "select * from USERS";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs));
+        return jdbcTemplate.query(sql, this::makeUser);
     }
 
-    public Optional<User> getById(int id) {
+    @Override
+    public User getById(int id) {
         String sql = "select * from USERS where USER_ID = ?";
 
-        List<User> users = jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs), id);
-        if (!users.isEmpty()) {
-            return Optional.of(users.get(0));
+        List<User> users = jdbcTemplate.query(sql, this::makeUser, id);
+        if (!users.isEmpty() && users.get(0) != null) {
+            return users.get(0);
         } else {
-            return Optional.empty();
+            return null;
         }
     }
 
@@ -51,8 +50,8 @@ public class UserDbStorage implements UserStorage {
         String sqlInsert = "insert into USERS (EMAIL, LOGIN, USERNAME, BIRTHDAY)" +
                 "values (?, ?, ?, ?)";
 
-        int id = jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sqlInsert, new String[] {"USER_ID"});
 
             String email = user.getEmail();
             String login = user.getLogin();
@@ -65,26 +64,30 @@ public class UserDbStorage implements UserStorage {
             ps.setDate(4, java.sql.Date.valueOf(birthday));
 
             return ps;
-        });
+        }, keyHolder);
 
-        Optional<User> createdUser = this.getById(id);
-        return createdUser.orElseGet(() -> null);
+        int id = -1;
+        Number keyId = keyHolder.getKey();
+        if (keyId != null)
+            id = keyId.intValue();
+
+        return this.getById(id);
     }
 
     @Override
     public User update(User user) {
-        int id = -1;
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         String sqlInsert = "update USERS set EMAIL = ?, LOGIN = ?, USERNAME = ?, BIRTHDAY = ? where USER_ID = ?";
 
         if (isUserWithIdPresent(user.getId())) {
-            id = jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(sqlInsert, new String[] {"USER_ID"});
 
-                int updateUserId = user.getId();
                 String email = user.getEmail();
                 String login = user.getLogin();
                 String username = user.getName();
                 LocalDate birthday = user.getBirthday();
+                int updateUserId = user.getId();
 
                 ps.setString(1, email);
                 ps.setString(2, login);
@@ -93,11 +96,15 @@ public class UserDbStorage implements UserStorage {
                 ps.setInt(5, updateUserId);
 
                 return ps;
-            });
+            }, keyHolder);
         }
 
-        Optional<User> createdUser = this.getById(id);
-        return createdUser.orElseGet(() -> null);
+        int id = -1;
+        Number keyId = keyHolder.getKey();
+        if (keyId != null)
+            id = keyId.intValue();
+
+        return this.getById(id);
     }
 
     @Override
@@ -111,7 +118,9 @@ public class UserDbStorage implements UserStorage {
         return null;
     }
 
-    private User makeUser(ResultSet rs) throws SQLException {
+    private User makeUser(ResultSet rs, int rowNum) throws SQLException {
+        if (rowNum < 0)
+            return null;
         Integer id = rs.getInt("USER_ID");
         String email = rs.getString("EMAIL");
         String login = rs.getString("LOGIN");
@@ -122,6 +131,6 @@ public class UserDbStorage implements UserStorage {
     }
 
     private boolean isUserWithIdPresent(int id) {
-        return this.getById(id).isPresent();
+        return this.getById(id) != null;
     }
 }

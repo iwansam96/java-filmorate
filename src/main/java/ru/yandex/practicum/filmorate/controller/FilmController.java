@@ -25,11 +25,13 @@ public class FilmController {
 
     @GetMapping("/films")
     public Collection<Film> getAll() {
+        log.info("Получен запрос к эндпоинту: GET /films");
         return service.getAll();
     }
 
     @GetMapping("/films/{id}")
     public Film getById(@PathVariable int id) {
+        log.info("Получен запрос к эндпоинту: GET /films/{id}");
         Film result = service.getById(id);
         if (result == null) {
             log.warn("Film id {} not found", id);
