@@ -5,9 +5,9 @@ VALUES ( 'film1',
          173,
          (select MPA_ID from MPAS where MPAS.MPA_NAME='NC_17')
        );
--- insert into GENRES (FILM_ID, GENRE_ID)
--- values ( (select FILM_ID from FILMS where FILM_NAME='film1'),
---          (select GENRE_ID from GENRES where GENRES.GENRE_NAME='CARTOON') );
+insert into FILMS_GENRES (FILM_ID, GENRE_ID)
+values ( (select FILM_ID from FILMS where FILM_NAME='film1'),
+         (select GENRE_ID from GENRES where GENRES.GENRE_NAME='CARTOON') );
 
 insert into FILMS (FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA)
 values ( 'film2',
@@ -16,12 +16,12 @@ values ( 'film2',
          260,
          (select MPA_ID from MPAS where MPAS.MPA_NAME='PG_13')
        );
--- insert into GENRES (FILM_ID, GENRE_ID)
--- values ( (select FILM_ID from FILMS where FILM_NAME='film2'),
---          (select GENRE_ID from GENRES where GENRES.GENRE_NAME='DOCUMENTARY') );
--- insert into GENRES (FILM_ID, GENRE_ID)
--- values ( (select FILM_ID from FILMS where FILM_NAME='film2'),
---          (select GENRE_ID from GENRES where GENRES.GENRE_NAME='CARTOON') );
+insert into FILMS_GENRES (FILM_ID, GENRE_ID)
+values ( (select FILM_ID from FILMS where FILM_NAME='film2'),
+         (select GENRE_ID from GENRES where GENRES.GENRE_NAME='DOCUMENTARY') );
+insert into FILMS_GENRES (FILM_ID, GENRE_ID)
+values ( (select FILM_ID from FILMS where FILM_NAME='film2'),
+         (select GENRE_ID from GENRES where GENRES.GENRE_NAME='CARTOON') );
 
 
 insert into USERS (EMAIL, LOGIN, USERNAME, BIRTHDAY)

@@ -7,25 +7,29 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Primary
 public class FilmDbStorage implements FilmStorage{
 
     private final JdbcTemplate jdbcTemplate;
+    private final MpaStorage mpaStorage;
+    private final GenreStorage genreStorage;
 
     @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate, MpaStorage mpaStorage, GenreStorage genreStorage) {
         this.jdbcTemplate = jdbcTemplate;
+        this.mpaStorage = mpaStorage;
+        this.genreStorage = genreStorage;
     }
 
     @Override
@@ -131,10 +135,17 @@ public class FilmDbStorage implements FilmStorage{
         LocalDate releaseDate = rs.getDate("RELEASE_DATE").toLocalDate();
         int duration = rs.getInt("DURATION");
         Set<Integer> likes = getLikesByFilmId(id);
-//        genre;
 //        mpa;
+        int mpaId = rs.getInt("MPA");
+        Mpa mpa = mpaStorage.getById(mpaId);
+//        genre;
+        var genres = genreStorage.getGenresByFilmId(id);
 
-        return new Film(id, name, description, releaseDate, duration, likes);
+        Film film = new Film(id, name, description, releaseDate, duration, likes);
+        film.setMpa(mpa);
+        film.setGenres(genres);
+
+        return film;
     }
 
     private Set<Integer> getLikesByFilmId(int id) {
@@ -154,4 +165,5 @@ public class FilmDbStorage implements FilmStorage{
     private boolean isFilmWithIdPresent(int id) {
         return this.getById(id) != null;
     }
+
 }
