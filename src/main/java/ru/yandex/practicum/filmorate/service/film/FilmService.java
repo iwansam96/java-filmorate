@@ -6,10 +6,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
@@ -22,7 +19,6 @@ public class FilmService {
     }
 
 
-    //    Basic functions
     public Collection<Film> getAll() {
         return storage.getAll();
     }
@@ -44,7 +40,7 @@ public class FilmService {
         return storage.delete(film);
     }
 
-    //    Business functions
+
     public Film addLike(int filmId, int userId) {
         return storage.addLike(filmId, userId);
     }

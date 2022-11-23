@@ -36,7 +36,6 @@ public class FilmStorageTest {
                 256, new HashSet<>());
         Film result = filmDbStorage.create(film);
         assertTrue(filmDbStorage.getAll().contains(result));
-//        assertEquals(film, result);
     }
 
     @Test
@@ -45,8 +44,6 @@ public class FilmStorageTest {
         String newDescription = "Updated description";
         var films = filmDbStorage.getAll();
         for (Film f : films) {
-            System.out.println("#######shouldReturnAllFilmsWithFilm2WithNewDescription####");
-            System.out.println(f);
             if (f.getName().equals("film2"))
                 film = f;
         }

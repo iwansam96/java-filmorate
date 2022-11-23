@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -37,7 +35,6 @@ public class UserStorageTest {
                 LocalDate.of(1991, 11, 11));
         User result = userDbStorage.create(user);
         assertTrue(userDbStorage.getAll().contains(result));
-//        assertEquals(user, result);
     }
 
     @Test
@@ -60,7 +57,6 @@ public class UserStorageTest {
     public void shouldReturnAllUsersWithoutFirst() {
         Collection<User> allUsers = userDbStorage.getAll();
         var userToDelete = (User) allUsers.toArray()[0];
-        System.out.println(userToDelete);
         userDbStorage.delete(userToDelete);
         allUsers = userDbStorage.getAll();
 
