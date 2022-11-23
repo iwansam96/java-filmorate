@@ -3,25 +3,25 @@ VALUES ( 'film1',
          'description for film1',
          '2020-11-23',
          173,
-         (select MPA_ID from MPAS where MPAS.MPA_NAME='NC_17')
+         (select MPA_ID from MPAS where MPAS.MPA_NAME='NC-17')
        );
 insert into FILMS_GENRES (FILM_ID, GENRE_ID)
 values ( (select FILM_ID from FILMS where FILM_NAME='film1'),
-         (select GENRE_ID from GENRES where GENRES.GENRE_NAME='CARTOON') );
+         (select GENRE_ID from GENRES where GENRES.GENRE_NAME='Мультфильм') );
 
 insert into FILMS (FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA)
 values ( 'film2',
          'description for film2',
          '2007-09-23',
          260,
-         (select MPA_ID from MPAS where MPAS.MPA_NAME='PG_13')
+         (select MPA_ID from MPAS where MPAS.MPA_NAME='PG-13')
        );
 insert into FILMS_GENRES (FILM_ID, GENRE_ID)
 values ( (select FILM_ID from FILMS where FILM_NAME='film2'),
-         (select GENRE_ID from GENRES where GENRES.GENRE_NAME='DOCUMENTARY') );
+         (select GENRE_ID from GENRES where GENRES.GENRE_NAME='Документальный') );
 insert into FILMS_GENRES (FILM_ID, GENRE_ID)
 values ( (select FILM_ID from FILMS where FILM_NAME='film2'),
-         (select GENRE_ID from GENRES where GENRES.GENRE_NAME='CARTOON') );
+         (select GENRE_ID from GENRES where GENRES.GENRE_NAME='Мультфильм') );
 
 
 insert into USERS (EMAIL, LOGIN, USERNAME, BIRTHDAY)

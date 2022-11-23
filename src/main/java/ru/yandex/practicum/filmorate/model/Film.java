@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.validator.ValidFilmReleaseDate;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -28,8 +27,9 @@ public class Film {
     private int duration;
 
     private Set<Integer> likes;
-
     private Collection<Genre> genres;
+
+    @NotNull
     private Mpa mpa;
 
 

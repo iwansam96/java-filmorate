@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_= @Autowired)
 @Sql("/testSchema.sql")
+@Sql("/data.sql")
 @Sql("/testdata.sql")
 public class FilmStorageTest {
     private final FilmDbStorage filmDbStorage;
@@ -34,6 +36,7 @@ public class FilmStorageTest {
     public void shouldReturnAllFilmsWithNewFilm() {
         Film film = new Film(-1, "newFilm", "newFilm Description", LocalDate.of(2002, 02, 02),
                 256, new HashSet<>());
+        film.setMpa(new Mpa(1, "testMpa"));
         Film result = filmDbStorage.create(film);
         assertTrue(filmDbStorage.getAll().contains(result));
     }
@@ -50,6 +53,7 @@ public class FilmStorageTest {
         if (film != null) {
             film.setDescription(newDescription);
         }
+
         Film updatedFilm = filmDbStorage.update(film);
         assertEquals(newDescription, updatedFilm.getDescription());
     }

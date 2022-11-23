@@ -41,8 +41,10 @@ public class GenreDbStorage implements GenreStorage {
 
         List<Integer> genreIds = jdbcTemplate.queryForList(sql, Integer.class, filmId);
 
-        for (int genreId : genreIds) {
-            genres.add(this.getById(genreId));
+        if (!genreIds.isEmpty() && genreIds.get(0) != null) {
+            for (int genreId : genreIds) {
+                genres.add(this.getById(genreId));
+            }
         }
 
         return genres;

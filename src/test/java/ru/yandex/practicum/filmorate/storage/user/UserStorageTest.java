@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_= @Autowired)
 @Sql("/testSchema.sql")
+@Sql("/data.sql")
 @Sql("/testdata.sql")
 public class UserStorageTest {
     private final UserDbStorage userDbStorage;
