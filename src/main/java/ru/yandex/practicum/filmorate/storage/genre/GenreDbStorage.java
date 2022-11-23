@@ -40,8 +40,8 @@ public class GenreDbStorage implements GenreStorage {
         String sql = "select GENRE_ID from FILMS_GENRES where FILM_ID = ?";
 
         List<Integer> genreIds = jdbcTemplate.queryForList(sql, Integer.class, filmId);
-        if (genreIds.isEmpty() || genreIds.get(0) == null)
-            return null;
+//        if (genreIds.isEmpty() || genreIds.get(0) == null)
+//            return null;
 
         for (int genreId : genreIds) {
             genres.add(this.getById(genreId));

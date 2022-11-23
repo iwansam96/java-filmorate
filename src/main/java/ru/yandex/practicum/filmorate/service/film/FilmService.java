@@ -45,33 +45,15 @@ public class FilmService {
     }
 
     //    Business functions
-
     public Film addLike(int filmId, int userId) {
-        Film film = this.getById(filmId);
-        Set<Integer> likes = film.getLikes();
-        boolean result = likes.add(userId);
-        if (!result)
-            return null;
-        else
-            film.setLikes(likes);
-        return film;
+        return storage.addLike(filmId, userId);
     }
 
     public Film deleteLike(int filmId, int userId) {
-        Film film = this.getById(filmId);
-        Set<Integer> likes = film.getLikes();
-        if (likes.contains(userId)) {
-            likes.remove(userId);
-        }
-        else
-            return null;
-        return film;
+        return storage.deleteLike(filmId, userId);
     }
 
-    public List<Film> getTopLiked(int count) {
-        return storage.getAll().stream()
-                .sorted((f1, f2) -> f2.getLikes().size()-f1.getLikes().size())
-                .limit(count)
-                .collect(Collectors.toList());
+    public Collection<Film> getTopLiked(int count) {
+        return storage.getTopLiked(count);
     }
 }

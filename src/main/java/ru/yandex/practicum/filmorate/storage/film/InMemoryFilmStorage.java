@@ -5,9 +5,8 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.util.IdGenerator;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -48,5 +47,37 @@ public class InMemoryFilmStorage implements FilmStorage{
         else
             return null;
         return film;
+    }
+
+    @Override
+    public Film addLike(int filmId, int userId) {
+        Film film = this.getById(filmId);
+        Set<Integer> likes = film.getLikes();
+        boolean result = likes.add(userId);
+        if (!result)
+            return null;
+        else
+            film.setLikes(likes);
+        return film;
+    }
+
+    @Override
+    public Film deleteLike(int filmId, int userId) {
+        Film film = this.getById(filmId);
+        Set<Integer> likes = film.getLikes();
+        if (likes.contains(userId)) {
+            likes.remove(userId);
+        }
+        else
+            return null;
+        return film;
+    }
+
+    @Override
+    public List<Film> getTopLiked(int count) {
+        return this.getAll().stream()
+                .sorted((f1, f2) -> f2.getLikes().size()-f1.getLikes().size())
+                .limit(count)
+                .collect(Collectors.toList());
     }
 }

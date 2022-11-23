@@ -91,7 +91,7 @@ public class FilmController {
     }
 
     @GetMapping("/films/popular")
-    public List<Film> getTopLiked(@RequestParam(value="count", required = false) Integer count) {
+    public Collection<Film> getTopLiked(@RequestParam(value="count", required = false) Integer count) {
         log.info("Получен запрос к эндпоинту: GET /films/popular?count={}", count);
         int size = count == null ? 10 : count;
         return service.getTopLiked(size);
