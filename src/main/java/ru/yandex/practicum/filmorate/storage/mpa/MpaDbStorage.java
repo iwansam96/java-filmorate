@@ -21,7 +21,7 @@ public class MpaDbStorage implements MpaStorage{
     }
 
     public Collection<Mpa> getAll() {
-        String sql = "select * from MPAS where MPA_ID = ?";
+        String sql = "select * from MPAS where MPA_ID";
 
         return jdbcTemplate.query(sql, this::makeMpa);
     }

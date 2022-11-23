@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
@@ -55,8 +56,8 @@ public class FilmDbStorage implements FilmStorage{
     public Film create(Film film) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        String sqlInsert = "insert into FILMS (FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION) " +
-                "values (?, ?, ?, ?)";
+        String sqlInsert = "insert into FILMS (FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA) " +
+                "values (?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sqlInsert, new String[] {"FILM_ID"});
@@ -65,11 +66,13 @@ public class FilmDbStorage implements FilmStorage{
             String description = film.getDescription();
             LocalDate releaseDate = film.getReleaseDate();
             int duration = film.getDuration();
+            int mpa = film.getMpa().getId();
 
             ps.setString(1, name);
             ps.setString(2, description);
             ps.setDate(3, java.sql.Date.valueOf(releaseDate));
             ps.setInt(4, duration);
+            ps.setInt(5, mpa);
 
             return ps;
         }, keyHolder);
@@ -78,6 +81,12 @@ public class FilmDbStorage implements FilmStorage{
         Number keyId = keyHolder.getKey();
         if (keyId != null)
             id = keyId.intValue();
+
+        var genres = film.getGenres();
+        if (genres != null) {
+            for (Genre genre : genres)
+                this.addGenreToFilm(id, genre.getId());
+        }
 
         return this.getById(id);
     }
@@ -86,7 +95,8 @@ public class FilmDbStorage implements FilmStorage{
     public Film update(Film film) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        String sqlInsert = "update FILMS set FILM_NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ? where FILM_ID = ?";
+        String sqlInsert = "update FILMS set FILM_NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, MPA = ? " +
+                "where FILM_ID = ?";
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sqlInsert, new String[] {"FILM_ID"});
@@ -95,13 +105,15 @@ public class FilmDbStorage implements FilmStorage{
             String description = film.getDescription();
             LocalDate releaseDate = film.getReleaseDate();
             int duration = film.getDuration();
+            int mpa = film.getMpa().getId();
             int updateFilmId = film.getId();
 
             ps.setString(1, name);
             ps.setString(2, description);
             ps.setDate(3, java.sql.Date.valueOf(releaseDate));
             ps.setInt(4, duration);
-            ps.setInt(5, updateFilmId);
+            ps.setInt(5, mpa);
+            ps.setInt(6, updateFilmId);
 
             return ps;
         }, keyHolder);
@@ -110,6 +122,12 @@ public class FilmDbStorage implements FilmStorage{
         Number keyId = keyHolder.getKey();
         if (keyId != null)
             id = keyId.intValue();
+
+        var genres = film.getGenres();
+        if (genres != null) {
+            for (Genre genre : genres)
+                this.addGenreToFilm(id, genre.getId());
+        }
 
         return this.getById(id);
     }
@@ -166,4 +184,9 @@ public class FilmDbStorage implements FilmStorage{
         return this.getById(id) != null;
     }
 
+    private void addGenreToFilm(int filmId, int genreId) {
+        String sql = "insert into FILMS_GENRES (FILM_ID, GENRE_ID) values ( ?, ? )";
+
+        jdbcTemplate.update(sql, filmId, genreId);
+    }
 }
