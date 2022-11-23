@@ -68,8 +68,9 @@ public class UserDbStorage implements UserStorage {
 
         int id = -1;
         Number keyId = keyHolder.getKey();
-        if (keyId != null)
-            id = keyId.intValue();
+        if (keyId == null)
+            return null;
+        id = keyId.intValue();
 
         return this.getById(id);
     }
@@ -101,8 +102,9 @@ public class UserDbStorage implements UserStorage {
 
         int id = -1;
         Number keyId = keyHolder.getKey();
-        if (keyId != null)
-            id = keyId.intValue();
+        if (keyId == null)
+            return null;
+        id = keyId.intValue();
 
         return this.getById(id);
     }

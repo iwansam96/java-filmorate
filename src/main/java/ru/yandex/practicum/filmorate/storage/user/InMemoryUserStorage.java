@@ -26,8 +26,6 @@ public class InMemoryUserStorage implements UserStorage{
     @Override
     public User create(User user) {
         user.setId(IdGenerator.generateId("user"));
-        if (user.getName().isBlank())
-            user.setName(user.getLogin());
         users.put(user.getId(), user);
         return user;
     }
