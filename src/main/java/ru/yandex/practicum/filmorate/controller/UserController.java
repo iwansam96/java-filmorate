@@ -52,7 +52,7 @@ public class UserController {
             log.warn("Id not found");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return user;
+        return result;
     }
 
     @DeleteMapping("/users")

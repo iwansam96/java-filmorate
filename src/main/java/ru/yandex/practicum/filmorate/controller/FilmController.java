@@ -43,8 +43,7 @@ public class FilmController {
     @PostMapping("/films")
     public Film create(@Valid @RequestBody Film film) {
         log.info("Получен запрос к эндпоинту: POST /films");
-        service.create(film);
-        return film;
+        return service.create(film);
     }
 
     @PutMapping("/films")
@@ -55,7 +54,7 @@ public class FilmController {
             log.warn("Film with id {} to UPDATE not found", film.getId());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return film;
+        return result;
     }
 
     @DeleteMapping("/films")

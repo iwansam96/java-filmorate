@@ -25,11 +25,14 @@ public class GenreController {
 
     @GetMapping("/genres")
     public Collection<Genre> getAll() {
+        log.info("Получен запрос к эндпоинту: GET /genres");
         return service.getAll();
     }
 
     @GetMapping("/genres/{id}")
     public Genre getById(@PathVariable int id) {
+        log.info("Получен запрос к эндпоинту: GET /genres/{id}");
+
         Genre result = service.getById(id);
         if (result == null) {
             log.warn("Genre id {} not found", id);

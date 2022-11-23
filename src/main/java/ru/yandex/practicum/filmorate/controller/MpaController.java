@@ -25,11 +25,14 @@ public class MpaController {
 
     @GetMapping("/mpa")
     public Collection<Mpa> getAll() {
+        log.info("Получен запрос к эндпоинту: GET /mpa");
         return service.getAll();
     }
 
     @GetMapping("/mpa/{id}")
     public Mpa getById(@PathVariable int id) {
+        log.info("Получен запрос к эндпоинту: GET /mpa/{id}");
+
         Mpa result = service.getById(id);
         if (result == null) {
             log.warn("Mpa id {} not found", id);
