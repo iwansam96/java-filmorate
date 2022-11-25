@@ -25,11 +25,13 @@ public class FilmController {
 
     @GetMapping("/films")
     public Collection<Film> getAll() {
+        log.info("Получен запрос к эндпоинту: GET /films");
         return service.getAll();
     }
 
     @GetMapping("/films/{id}")
     public Film getById(@PathVariable int id) {
+        log.info("Получен запрос к эндпоинту: GET /films/{id}");
         Film result = service.getById(id);
         if (result == null) {
             log.warn("Film id {} not found", id);
@@ -41,8 +43,7 @@ public class FilmController {
     @PostMapping("/films")
     public Film create(@Valid @RequestBody Film film) {
         log.info("Получен запрос к эндпоинту: POST /films");
-        service.create(film);
-        return film;
+        return service.create(film);
     }
 
     @PutMapping("/films")
@@ -53,7 +54,7 @@ public class FilmController {
             log.warn("Film with id {} to UPDATE not found", film.getId());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return film;
+        return result;
     }
 
     @DeleteMapping("/films")
@@ -68,9 +69,9 @@ public class FilmController {
     }
 
     @PutMapping("/films/{id}/like/{userId}")
-    public Film addLike(@PathVariable int id, @PathVariable int userId) {
+    public Integer addLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Получен запрос к эндпоинту: PUT /films/{}/like/{}", id, userId);
-        Film result = service.addLike(id, userId);
+        Integer result = service.addLike(id, userId);
         if (result == null) {
             log.warn("Film with id {} or like from user with id {} to PUT LIKE not found", id, userId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -79,9 +80,9 @@ public class FilmController {
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
-    public Film deleteLike(@PathVariable int id, @PathVariable int userId) {
+    public Integer deleteLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Получен запрос к эндпоинту: DELETE /films/{}/like/{}", id, userId);
-        Film result = service.deleteLike(id, userId);
+        Integer result = service.deleteLike(id, userId);
         if (result == null) {
             log.warn("Film with id {} or like from user with id {} to DELETE LIKE not found", id, userId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -90,7 +91,7 @@ public class FilmController {
     }
 
     @GetMapping("/films/popular")
-    public List<Film> getTopLiked(@RequestParam(value="count", required = false) Integer count) {
+    public Collection<Film> getTopLiked(@RequestParam(value="count", required = false) Integer count) {
         log.info("Получен запрос к эндпоинту: GET /films/popular?count={}", count);
         int size = count == null ? 10 : count;
         return service.getTopLiked(size);

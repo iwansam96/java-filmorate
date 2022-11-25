@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -24,11 +23,13 @@ public class UserController {
 
     @GetMapping("/users")
     public Collection<User> getAll() {
+        log.info("Получен запрос к эндпоинту: GET /users");
         return service.getAll();
     }
 
     @GetMapping("/users/{id}")
     public User getById(@PathVariable int id) {
+        log.info("Получен запрос к эндпоинту: GET /users/{id}");
         User result = service.getById(id);
         if (result == null) {
             log.warn("User id {} not found", id);
@@ -40,8 +41,7 @@ public class UserController {
     @PostMapping("/users")
     public User create(@Valid @RequestBody User user) {
         log.info("Получен запрос к эндпоинту: POST /users");
-        service.create(user);
-        return user;
+        return service.create(user);
     }
 
     @PutMapping("/users")
@@ -52,7 +52,7 @@ public class UserController {
             log.warn("Id not found");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return user;
+        return result;
     }
 
     @DeleteMapping("/users")
@@ -100,9 +100,9 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}/friends/common/{otherId}")
-    public List<User> getMutualFriends(@PathVariable int id, @PathVariable int otherId) {
+    public Collection<User> getMutualFriends(@PathVariable int id, @PathVariable int otherId) {
         log.info("Получен запрос к эндпоинту: GET /users/{}/friends/common/{}", id, otherId);
-        List<User> result = service.getMutualFriends(id, otherId);
+        Collection<User> result = service.getMutualFriends(id, otherId);
         if (result == null) {
             log.warn("User with id {} or {} to GET MUTUAL FRIENDS not found", id, otherId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
