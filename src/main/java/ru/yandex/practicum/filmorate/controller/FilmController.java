@@ -69,9 +69,9 @@ public class FilmController {
     }
 
     @PutMapping("/films/{id}/like/{userId}")
-    public Film addLike(@PathVariable int id, @PathVariable int userId) {
+    public Integer addLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Получен запрос к эндпоинту: PUT /films/{}/like/{}", id, userId);
-        Film result = service.addLike(id, userId);
+        Integer result = service.addLike(id, userId);
         if (result == null) {
             log.warn("Film with id {} or like from user with id {} to PUT LIKE not found", id, userId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -80,9 +80,9 @@ public class FilmController {
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
-    public Film deleteLike(@PathVariable int id, @PathVariable int userId) {
+    public Integer deleteLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Получен запрос к эндпоинту: DELETE /films/{}/like/{}", id, userId);
-        Film result = service.deleteLike(id, userId);
+        Integer result = service.deleteLike(id, userId);
         if (result == null) {
             log.warn("Film with id {} or like from user with id {} to DELETE LIKE not found", id, userId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

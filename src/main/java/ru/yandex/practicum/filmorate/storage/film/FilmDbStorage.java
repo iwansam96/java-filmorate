@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 
 import java.sql.PreparedStatement;
@@ -25,12 +26,15 @@ public class FilmDbStorage implements FilmStorage{
     private final JdbcTemplate jdbcTemplate;
     private final MpaStorage mpaStorage;
     private final GenreStorage genreStorage;
+    private final LikeStorage likeStorage;
 
     @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, MpaStorage mpaStorage, GenreStorage genreStorage) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate, MpaStorage mpaStorage, GenreStorage genreStorage,
+                         LikeStorage likeStorage) {
         this.jdbcTemplate = jdbcTemplate;
         this.mpaStorage = mpaStorage;
         this.genreStorage = genreStorage;
+        this.likeStorage = likeStorage;
     }
 
     @Override
@@ -56,11 +60,11 @@ public class FilmDbStorage implements FilmStorage{
     public Film create(Film film) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        String sqlInsert = "insert into FILMS (FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA) " +
+        String sql = "insert into FILMS (FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA) " +
                 "values (?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sqlInsert, new String[] {"FILM_ID"});
+            PreparedStatement ps = connection.prepareStatement(sql, new String[] {"FILM_ID"});
 
             String name = film.getName();
             String description = film.getDescription();
@@ -95,11 +99,11 @@ public class FilmDbStorage implements FilmStorage{
     public Film update(Film film) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        String sqlInsert = "update FILMS set FILM_NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, MPA = ? " +
+        String sql = "update FILMS set FILM_NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, MPA = ? " +
                 "where FILM_ID = ?";
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sqlInsert, new String[] {"FILM_ID"});
+            PreparedStatement ps = connection.prepareStatement(sql, new String[] {"FILM_ID"});
 
             String name = film.getName();
             String description = film.getDescription();
@@ -141,26 +145,6 @@ public class FilmDbStorage implements FilmStorage{
     }
 
     @Override
-    public Film addLike(int filmId, int userId) {
-        String sql = "insert into LIKES (FILM_ID, USER_ID) values ( ?, ? )";
-
-        jdbcTemplate.update(sql, filmId, userId);
-
-        return this.getById(filmId);
-    }
-
-    @Override
-    public Film deleteLike(int filmId, int userId) {
-        String sql = "delete from LIKES where FILM_ID = ? and USER_ID = ?";
-
-        int lines = jdbcTemplate.update(sql, filmId, userId);
-        if (lines < 1)
-            return null;
-
-        return this.getById(filmId);
-    }
-
-    @Override
     public Collection<Film> getTopLiked(int count) {
         String sql = "select L.FILM_ID, FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA from LIKES as L " +
                 "left join FILMS as F on F.FILM_ID = L.FILM_ID limit ?";
@@ -182,7 +166,7 @@ public class FilmDbStorage implements FilmStorage{
         String description = rs.getString("DESCRIPTION");
         LocalDate releaseDate = rs.getDate("RELEASE_DATE").toLocalDate();
         int duration = rs.getInt("DURATION");
-        Set<Integer> likes = getLikesByFilmId(id);
+        Set<Integer> likes = likeStorage.getLikesByFilmId(id);
 //        mpa;
         int mpaId = rs.getInt("MPA");
         Mpa mpa = mpaStorage.getById(mpaId);
@@ -196,24 +180,11 @@ public class FilmDbStorage implements FilmStorage{
         return film;
     }
 
-    private Set<Integer> getLikesByFilmId(int id) {
-        String sql = "select * from LIKES where FILM_ID = ?";
-        var likes = jdbcTemplate.query(sql, this::makeLike, id);
-        if (likes.isEmpty() || likes.get(0) == null)
-            return null;
-        return new HashSet<>(likes);
-    }
-
-    private Integer makeLike(ResultSet rs, int rowNum) throws SQLException {
-        if (rowNum < 0)
-            return null;
-        return rs.getInt("USER_ID");
-    }
-
     private boolean isFilmWithIdPresent(int id) {
         return this.getById(id) != null;
     }
 
+    // Genres
     private void addGenreToFilm(int filmId, int genreId) {
         String sql = "merge into FILMS_GENRES (FILM_ID, GENRE_ID) values ( ?, ? )";
 

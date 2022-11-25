@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -12,10 +13,12 @@ import java.util.Optional;
 public class FilmService {
 
     private final FilmStorage storage;
+    private final LikeStorage likeStorage;
 
     @Autowired
-    public FilmService(FilmStorage storage) {
+    public FilmService(FilmStorage storage, LikeStorage likeStorage) {
         this.storage = storage;
+        this.likeStorage = likeStorage;
     }
 
 
@@ -41,12 +44,12 @@ public class FilmService {
     }
 
 
-    public Film addLike(int filmId, int userId) {
-        return storage.addLike(filmId, userId);
+    public Integer addLike(int filmId, int userId) {
+        return likeStorage.addLike(filmId, userId);
     }
 
-    public Film deleteLike(int filmId, int userId) {
-        return storage.deleteLike(filmId, userId);
+    public Integer deleteLike(int filmId, int userId) {
+        return likeStorage.deleteLike(filmId, userId);
     }
 
     public Collection<Film> getTopLiked(int count) {

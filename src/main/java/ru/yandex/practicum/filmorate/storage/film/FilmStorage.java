@@ -11,7 +11,7 @@ public interface FilmStorage {
     Film create(Film film);
     Film update(Film film);
     Film delete(Film film);
-    Film addLike(int filmId, int userId);
-    Film deleteLike(int filmId, int userId);
+//    Film addLike(int filmId, int userId);
+//    Film deleteLike(int filmId, int userId);
     Collection<Film> getTopLiked(int count);
 }
